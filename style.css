@@ -1,0 +1,32 @@
+body {
+  margin: 0;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+#menu, #gameOver {
+  position: absolute;
+  width: 100%;
+  top: 40%;
+  transform: translateY(-50%);
+}
+
+h1 {
+  font-size: 60px;
+  color: white;
+  text-shadow: 3px 3px black;
+}
+
+button {
+  padding: 15px 40px;
+  font-size: 20px;
+  background: yellow;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+canvas {
+  display: none;
+}
