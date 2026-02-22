@@ -1,25 +1,50 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Flappy Bird</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Mobile Responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <!-- Theme Color (Android Chrome Top Bar Color) -->
+  <meta name="theme-color" content="#4ec0ca">
+
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div id="menu">
-  <h1>FLAPPY BIRD</h1>
-  <button onclick="startGame()">PLAY</button>
-</div>
+  <!-- ===== MAIN MENU ===== -->
+  <div id="menu">
+    <h1>FLAPPY BIRD</h1>
 
-<canvas id="gameCanvas"></canvas>
+    <!-- Idle Bird Canvas -->
+    <canvas id="menuBird" width="200" height="200"></canvas>
 
-<div id="gameOver">
-  <h2>Game Over</h2>
-  <p id="scoreText"></p>
-  <button onclick="restartGame()">Restart</button>
-</div>
+    <p class="tapText">Tap To Start</p>
 
-<script src="script.js"></script>
+    <button onclick="startGame()">PLAY</button>
+  </div>
+
+
+  <!-- ===== GAME CANVAS ===== -->
+  <canvas id="gameCanvas"></canvas>
+
+
+  <!-- ===== GAME OVER SCREEN ===== -->
+  <div id="gameOver">
+    <div class="card">
+      <h2>Game Over</h2>
+      <p id="scoreText"></p>
+      <p id="medalText"></p>
+      <button onclick="startGame()">Play Again</button>
+    </div>
+  </div>
+
+
+  <!-- ===== SCRIPT ===== -->
+  <script src="script.js"></script>
+
 </body>
-</html>
+                                                     </html>
