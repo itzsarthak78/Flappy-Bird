@@ -6,25 +6,28 @@ body {
   text-align: center;
 }
 
-/* ===== MENU ===== */
+/* MENU */
 #menu {
   position: absolute;
   width: 100%;
-  top: 35%;
-  transform: translateY(-50%);
+  top: 20%;
+  color: white;
+  animation: fadeIn 1s ease-in-out;
 }
 
 #menu h1 {
   font-size: 70px;
-  color: white;
-  text-shadow: 4px 4px 0px #000;
-  animation: float 2s infinite ease-in-out;
+  text-shadow: 4px 4px black;
 }
 
-@keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
+.tapText {
+  font-size: 20px;
+  animation: blink 1.2s infinite;
+}
+
+@keyframes blink {
+  0%,100% {opacity:1;}
+  50% {opacity:0.3;}
 }
 
 button {
@@ -35,25 +38,39 @@ button {
   border-radius: 15px;
   box-shadow: 0 5px #c9a400;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: scale(1.05);
 }
 
 button:active {
-  box-shadow: 0 2px #c9a400;
   transform: translateY(3px);
 }
 
-/* ===== GAME OVER ===== */
+/* GAME OVER CARD */
 #gameOver {
+  display: none;
   position: absolute;
   width: 100%;
-  top: 40%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.5);
-  color: white;
-  padding: 20px;
-  display: none;
+  top: 25%;
+}
+
+.card {
+  background: white;
+  display: inline-block;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {opacity:0;}
+  to {opacity:1;}
 }
 
 canvas {
   display: none;
-}
+  }
