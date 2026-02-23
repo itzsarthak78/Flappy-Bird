@@ -5,27 +5,25 @@
 }
 
 body {
-  font-family: 'Arial Black', sans-serif;
+  font-family: Arial Black, sans-serif;
   overflow: hidden;
 }
 
-/* ===== SKY (16:9 SAFE) ===== */
+/* SKY USING LOCAL IMAGE */
 .sky {
   position: fixed;
   inset: 0;
-  background: url("https://i.ibb.co/S7cGTCyX/stunning-pink-clouds-sunrise-starry-night-sky-background-ai-generated-373868944.jpg") no-repeat center center;
+  background: url("assets/sky.jpg") no-repeat center center;
   background-size: cover;
   z-index: -2;
 }
 
-/* ===== CANVAS ===== */
 canvas {
   position: absolute;
   inset: 0;
   display: none;
 }
 
-/* ===== OVERLAY SYSTEM ===== */
 .overlay {
   position: absolute;
   inset: 0;
@@ -38,23 +36,19 @@ canvas {
   display: flex;
 }
 
-/* ===== PANEL ===== */
 .panel {
   text-align: center;
   width: 90%;
   max-width: 420px;
 }
 
-/* ===== TITLE ===== */
 .title {
   font-size: 60px;
   color: white;
-  text-shadow: 5px 5px 0px #000;
-  margin-bottom: 25px;
-  line-height: 1;
+  text-shadow: 5px 5px 0 #000;
+  margin-bottom: 20px;
 }
 
-/* ===== MENU BIRD ===== */
 .menu-bird {
   width: 90px;
   margin-bottom: 25px;
@@ -62,11 +56,10 @@ canvas {
 }
 
 @keyframes floatBird {
-  0%,100% { transform: translateY(0px); }
+  0%,100% { transform: translateY(0); }
   50% { transform: translateY(-20px); }
 }
 
-/* ===== BUTTONS ===== */
 .buttons {
   display: flex;
   flex-direction: column;
@@ -76,11 +69,10 @@ canvas {
 button {
   padding: 15px;
   font-size: 20px;
-  border: none;
   border-radius: 15px;
-  background: linear-gradient(145deg, #ffd800, #ffb700);
+  border: none;
+  background: #ffd800;
   box-shadow: 0 6px #cc9e00;
-  cursor: pointer;
 }
 
 button:active {
@@ -88,12 +80,13 @@ button:active {
   box-shadow: 0 2px #cc9e00;
 }
 
-/* ===== CREDIT ===== */
 .credit {
-  margin-top: 25px;
-  font-size: 14px;
+  margin-top: 20px;
   color: white;
-  opacity: 0.9;
-  letter-spacing: 1px;
-  text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
-                                }
+}
+
+#scoreText {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: white;
+}
