@@ -3,16 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flappy Bird Pro</title>
+<title>Flappy Bird</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- SKY BACKGROUND -->
-<div class="sky">
-  <div class="clouds"></div>
-</div>
+<div class="sky"></div>
 
+<!-- GAME CANVAS -->
 <canvas id="gameCanvas"></canvas>
 
 <!-- MAIN MENU -->
@@ -20,13 +19,16 @@
   <div class="panel">
     <h1 class="title">FLAPPY<br>BIRD</h1>
 
-    <!-- Animated Menu Bird -->
-    <div class="menu-bird" id="menuBird"></div>
+    <img id="menuBird"
+      src="https://i.ibb.co/GfpmSgRX/1000016542-removebg-preview.png"
+      class="menu-bird">
 
     <div class="buttons">
       <button onclick="startGame()">PLAY</button>
       <button onclick="exitGame()">EXIT</button>
     </div>
+
+    <p class="credit">Prepared by Sarthak</p>
   </div>
 </div>
 
