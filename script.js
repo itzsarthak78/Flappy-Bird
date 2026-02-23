@@ -6,22 +6,22 @@ canvas.height = window.innerHeight;
 
 let bird, pipes, score;
 let gameRunning = false;
-let animationId;
+let animationId = null;
 let frame = 0;
 
 const birdImg = new Image();
 birdImg.src = "assets/bird.png";
 
-/* START GAME */
+/* =========================
+   SCREEN CONTROL
+========================= */
+
 function startGame() {
 
-  if (!birdImg.complete) {
-    alert("Images still loading...");
-    return;
-  }
-
+  // Hide overlays properly
   document.getElementById("menu").classList.remove("active");
   document.getElementById("gameOver").classList.remove("active");
+
   canvas.style.display = "block";
 
   bird = {
@@ -45,13 +45,23 @@ function startGame() {
 function goToMenu() {
   gameRunning = false;
   cancelAnimationFrame(animationId);
+
   canvas.style.display = "none";
+
+  // Remove game over
+  document.getElementById("gameOver").classList.remove("active");
+
+  // Show menu
   document.getElementById("menu").classList.add("active");
 }
 
 function exitGame() {
   alert("Thanks for playing!");
 }
+
+/* =========================
+   PIPE SPAWN
+========================= */
 
 function spawnPipe() {
   let gap = 220;
@@ -65,8 +75,14 @@ function spawnPipe() {
     passed: false
   });
 
-  if (gameRunning) setTimeout(spawnPipe, 2000);
+  if (gameRunning) {
+    setTimeout(spawnPipe, 2000);
+  }
 }
+
+/* =========================
+   DRAW BIRD
+========================= */
 
 function drawBird() {
   ctx.save();
@@ -83,66 +99,105 @@ function drawBird() {
   ctx.restore();
 }
 
+/* =========================
+   DRAW PIPES (WITH CAPS)
+========================= */
+
 function drawPipes() {
-  pipes.forEach((p,i)=>{
+  pipes.forEach((p, i) => {
+
     p.x -= 2.2;
 
-    ctx.fillStyle="#2ecc40";
-    ctx.fillRect(p.x,0,p.w,p.top);
-    ctx.fillRect(p.x,p.bottom,p.w,canvas.height-p.bottom-100);
+    // Pipe body
+    ctx.fillStyle = "#2ecc40";
+    ctx.fillRect(p.x, 0, p.w, p.top);
+    ctx.fillRect(p.x, p.bottom, p.w, canvas.height - p.bottom - 100);
 
-    if(bird.x + bird.w/2 > p.x &&
-       bird.x - bird.w/2 < p.x + p.w &&
-       (bird.y - bird.h/2 < p.top ||
-        bird.y + bird.h/2 > p.bottom)){
+    // Pipe caps
+    ctx.fillStyle = "#27ae60";
+    ctx.fillRect(p.x - 5, p.top - 25, p.w + 10, 25);
+    ctx.fillRect(p.x - 5, p.bottom, p.w + 10, 25);
+
+    // Collision
+    if (
+      bird.x + bird.w/2 > p.x &&
+      bird.x - bird.w/2 < p.x + p.w &&
+      (bird.y - bird.h/2 < p.top ||
+       bird.y + bird.h/2 > p.bottom)
+    ) {
       endGame();
     }
 
-    if(!p.passed && p.x + p.w < bird.x){
+    // Score
+    if (!p.passed && p.x + p.w < bird.x) {
       score++;
       p.passed = true;
     }
 
-    if(p.x + p.w < 0) pipes.splice(i,1);
+    // Remove offscreen pipes
+    if (p.x + p.w < 0) {
+      pipes.splice(i, 1);
+    }
   });
 }
 
+/* =========================
+   GROUND
+========================= */
+
 function drawGround() {
-  ctx.fillStyle="#ded895";
-  ctx.fillRect(0,canvas.height-100,canvas.width,100);
+  ctx.fillStyle = "#ded895";
+  ctx.fillRect(0, canvas.height - 100, canvas.width, 100);
 }
+
+/* =========================
+   PHYSICS
+========================= */
 
 function updateBird() {
   bird.velocity += bird.gravity;
   bird.y += bird.velocity;
 
-  if(bird.y + bird.h/2 > canvas.height-100) endGame();
-  if(bird.y - bird.h/2 < 0){
+  if (bird.y + bird.h/2 > canvas.height - 100) {
+    endGame();
+  }
+
+  if (bird.y - bird.h/2 < 0) {
     bird.y = bird.h/2;
     bird.velocity = 0;
   }
 }
 
-function loop(){
-  if(!gameRunning) return;
+/* =========================
+   GAME LOOP
+========================= */
+
+function loop() {
+  if (!gameRunning) return;
 
   frame++;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   updateBird();
   drawBird();
   drawPipes();
   drawGround();
 
-  ctx.fillStyle="white";
-  ctx.font="bold 50px Arial";
-  ctx.fillText(score,canvas.width/2-10,100);
+  ctx.fillStyle = "white";
+  ctx.font = "bold 50px Arial";
+  ctx.fillText(score, canvas.width / 2 - 10, 100);
 
   animationId = requestAnimationFrame(loop);
 }
 
-function endGame(){
-  gameRunning=false;
+/* =========================
+   END GAME
+========================= */
+
+function endGame() {
+  if (!gameRunning) return;
+
+  gameRunning = false;
   cancelAnimationFrame(animationId);
 
   document.getElementById("scoreText").innerHTML =
@@ -151,6 +206,18 @@ function endGame(){
   document.getElementById("gameOver").classList.add("active");
 }
 
-document.addEventListener("click",()=>{
-  if(gameRunning) bird.velocity = bird.lift;
+/* =========================
+   CONTROLS
+========================= */
+
+document.addEventListener("click", () => {
+  if (gameRunning) {
+    bird.velocity = bird.lift;
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Space" && gameRunning) {
+    bird.velocity = bird.lift;
+  }
 });
