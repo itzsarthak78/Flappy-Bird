@@ -9,7 +9,10 @@ let gameRunning = false;
 let animationId;
 let frame = 0;
 
-/* SCREEN CONTROL */
+const birdImg = new Image();
+birdImg.src = "https://i.ibb.co/GfpmSgRX/1000016542-removebg-preview.png";
+
+/* ===== START GAME ===== */
 function startGame() {
   document.getElementById("menu").classList.remove("active");
   document.getElementById("gameOver").classList.remove("active");
@@ -18,7 +21,8 @@ function startGame() {
   bird = {
     x: 120,
     y: canvas.height / 2,
-    r: 20,
+    w: 60,
+    h: 45,
     velocity: 0,
     gravity: 0.25,
     lift: -6
@@ -32,6 +36,7 @@ function startGame() {
   loop();
 }
 
+/* ===== MENU ===== */
 function goToMenu() {
   gameRunning = false;
   cancelAnimationFrame(animationId);
@@ -43,7 +48,7 @@ function exitGame() {
   alert("Thanks for playing!");
 }
 
-/* PIPE SPAWN */
+/* ===== SPAWN PIPES ===== */
 function spawnPipe() {
   let gap = 220;
   let top = Math.random() * (canvas.height - gap - 200) + 100;
@@ -59,7 +64,7 @@ function spawnPipe() {
   if (gameRunning) setTimeout(spawnPipe, 2000);
 }
 
-/* BIRD DRAW */
+/* ===== DRAW BIRD IMAGE ===== */
 function drawBird() {
   ctx.save();
   ctx.translate(bird.x, bird.y);
@@ -67,41 +72,16 @@ function drawBird() {
   let rotation = Math.max(Math.min(bird.velocity / 25, 0.4), -0.4);
   ctx.rotate(rotation);
 
-  // Body
-  ctx.fillStyle="yellow";
-  ctx.beginPath();
-  ctx.arc(0,0,bird.r,0,Math.PI*2);
-  ctx.fill();
+  // slight flap scale animation
+  let flapScale = 1 + Math.sin(frame * 0.3) * 0.05;
+  ctx.scale(flapScale, flapScale);
 
-  // Wing animation
-  ctx.fillStyle="orange";
-  ctx.beginPath();
-  ctx.ellipse(-5, Math.sin(frame*0.3)*6, 14, 8, 0, 0, Math.PI*2);
-  ctx.fill();
-
-  // Eye
-  ctx.fillStyle="white";
-  ctx.beginPath();
-  ctx.arc(8,-5,6,0,Math.PI*2);
-  ctx.fill();
-
-  ctx.fillStyle="black";
-  ctx.beginPath();
-  ctx.arc(10,-5,3,0,Math.PI*2);
-  ctx.fill();
-
-  // Beak
-  ctx.fillStyle="orange";
-  ctx.beginPath();
-  ctx.moveTo(15,0);
-  ctx.lineTo(28,5);
-  ctx.lineTo(15,10);
-  ctx.fill();
+  ctx.drawImage(birdImg, -bird.w/2, -bird.h/2, bird.w, bird.h);
 
   ctx.restore();
 }
 
-/* PIPES */
+/* ===== DRAW PIPES ===== */
 function drawPipes() {
   pipes.forEach((p,i)=>{
     p.x -= 2.2;
@@ -114,39 +94,41 @@ function drawPipes() {
     ctx.fillRect(p.x-5,p.top-25,p.w+10,25);
     ctx.fillRect(p.x-5,p.bottom,p.w+10,25);
 
-    if(bird.x+bird.r>p.x && bird.x-bird.r<p.x+p.w &&
-      (bird.y-bird.r<p.top || bird.y+bird.r>p.bottom)){
+    if(bird.x + bird.w/2 > p.x &&
+       bird.x - bird.w/2 < p.x + p.w &&
+       (bird.y - bird.h/2 < p.top ||
+        bird.y + bird.h/2 > p.bottom)){
       endGame();
     }
 
-    if(!p.passed && p.x+p.w<bird.x){
+    if(!p.passed && p.x + p.w < bird.x){
       score++;
-      p.passed=true;
+      p.passed = true;
     }
 
-    if(p.x+p.w<0) pipes.splice(i,1);
+    if(p.x + p.w < 0) pipes.splice(i,1);
   });
 }
 
-/* GROUND */
+/* ===== GROUND ===== */
 function drawGround() {
   ctx.fillStyle="#ded895";
   ctx.fillRect(0,canvas.height-100,canvas.width,100);
 }
 
-/* PHYSICS */
+/* ===== PHYSICS ===== */
 function updateBird() {
   bird.velocity += bird.gravity;
   bird.y += bird.velocity;
 
-  if(bird.y+bird.r>canvas.height-100) endGame();
-  if(bird.y-bird.r<0){
-    bird.y=bird.r;
-    bird.velocity=0;
+  if(bird.y + bird.h/2 > canvas.height-100) endGame();
+  if(bird.y - bird.h/2 < 0){
+    bird.y = bird.h/2;
+    bird.velocity = 0;
   }
 }
 
-/* LOOP */
+/* ===== GAME LOOP ===== */
 function loop(){
   if(!gameRunning) return;
 
@@ -165,7 +147,7 @@ function loop(){
   animationId = requestAnimationFrame(loop);
 }
 
-/* END */
+/* ===== END GAME ===== */
 function endGame(){
   gameRunning=false;
   cancelAnimationFrame(animationId);
@@ -176,9 +158,12 @@ function endGame(){
   document.getElementById("gameOver").classList.add("active");
 }
 
+/* ===== CONTROLS ===== */
 document.addEventListener("click",()=>{
-  if(gameRunning) bird.velocity=bird.lift;
+  if(gameRunning) bird.velocity = bird.lift;
 });
+
 document.addEventListener("keydown",e=>{
-  if(e.code==="Space" && gameRunning) bird.velocity=bird.lift;
+  if(e.code==="Space" && gameRunning)
+    bird.velocity = bird.lift;
 });
