@@ -1,4 +1,3 @@
-/* ===== RESET ===== */
 * {
   margin: 0;
   padding: 0;
@@ -6,56 +5,53 @@
 }
 
 body {
-  overflow: hidden;
   font-family: 'Arial Black', sans-serif;
+  overflow: hidden;
 }
 
-/* ===== SKY BACKGROUND ===== */
+/* SKY */
 #sky {
   position: fixed;
   inset: 0;
   background: linear-gradient(to bottom, #4ec0ca, #b2e6ff);
-  z-index: -2;
+  z-index: -1;
 }
 
-/* ===== CANVAS ===== */
+/* CANVAS */
 canvas {
   position: absolute;
   inset: 0;
   display: none;
-  z-index: 0;
 }
 
-/* ===== OVERLAY SYSTEM ===== */
+/* OVERLAY SYSTEM */
 .overlay {
   position: absolute;
   inset: 0;
   display: none;
   justify-content: center;
   align-items: center;
-  z-index: 10;
 }
 
 .overlay.active {
   display: flex;
 }
 
-/* ===== PANEL CARD ===== */
+/* PANEL */
 .panel {
   background: white;
-  padding: 40px 30px;
-  border-radius: 20px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-  text-align: center;
   width: 90%;
   max-width: 400px;
+  padding: 40px 25px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
 }
 
-/* ===== TITLES ===== */
+/* TITLES */
 h1 {
   font-size: 48px;
   margin-bottom: 30px;
-  color: #333;
 }
 
 h2 {
@@ -63,14 +59,13 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* ===== BUTTON GROUP ===== */
-.button-group {
+/* BUTTONS */
+.buttons {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-/* ===== BUTTON STYLE ===== */
 button {
   padding: 14px 0;
   font-size: 18px;
@@ -78,12 +73,8 @@ button {
   border-radius: 12px;
   background: linear-gradient(145deg, #ffd800, #ffb700);
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: 0.2s;
   box-shadow: 0 6px #cc9e00;
-}
-
-button:hover {
-  transform: translateY(-3px);
 }
 
 button:active {
@@ -91,7 +82,6 @@ button:active {
   box-shadow: 0 2px #cc9e00;
 }
 
-/* ===== SCORE TEXT ===== */
 #scoreText {
   margin-bottom: 20px;
   font-size: 20px;
