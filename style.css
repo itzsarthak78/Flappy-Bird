@@ -2,41 +2,45 @@ body {
   margin: 0;
   overflow: hidden;
   font-family: 'Arial Black', sans-serif;
-  background: linear-gradient(#4ec0ca, #b2e6ff);
   text-align: center;
 }
 
-/* MENU */
-#menu {
-  position: absolute;
+/* ===== SKY BACKGROUND (CSS Animated) ===== */
+#sky {
+  position: fixed;
   width: 100%;
-  top: 20%;
-  color: white;
-  animation: fadeIn 1s ease-in-out;
+  height: 100%;
+  background: linear-gradient(#4ec0ca, #b2e6ff);
+  z-index: -1;
 }
 
-#menu h1 {
+/* ===== SCREEN LAYOUT ===== */
+.screen {
+  position: absolute;
+  width: 100%;
+  top: 30%;
+  transform: translateY(-50%);
+}
+
+.hidden {
+  display: none;
+}
+
+h1 {
   font-size: 70px;
+  color: white;
   text-shadow: 4px 4px black;
 }
 
-.tapText {
-  font-size: 20px;
-  animation: blink 1.2s infinite;
-}
-
-@keyframes blink {
-  0%,100% {opacity:1;}
-  50% {opacity:0.3;}
-}
-
 button {
+  display: block;
+  margin: 15px auto;
   padding: 15px 50px;
   font-size: 22px;
   background: #ffd800;
   border: none;
   border-radius: 15px;
-  box-shadow: 0 5px #c9a400;
+  box-shadow: 0 6px #c9a400;
   cursor: pointer;
   transition: 0.2s;
 }
@@ -49,28 +53,15 @@ button:active {
   transform: translateY(3px);
 }
 
-/* GAME OVER CARD */
-#gameOver {
-  display: none;
-  position: absolute;
-  width: 100%;
-  top: 25%;
-}
-
+/* ===== GAME OVER CARD ===== */
 .card {
   background: white;
   display: inline-block;
   padding: 30px;
   border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-  animation: fadeIn 0.5s ease;
-}
-
-@keyframes fadeIn {
-  from {opacity:0;}
-  to {opacity:1;}
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
 }
 
 canvas {
   display: none;
-  }
+}
