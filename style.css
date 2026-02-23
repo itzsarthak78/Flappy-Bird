@@ -9,28 +9,13 @@ body {
   overflow: hidden;
 }
 
-/* ===== SKY TEXTURE ===== */
+/* ===== SKY (16:9 SAFE) ===== */
 .sky {
   position: fixed;
   inset: 0;
-  background: linear-gradient(to bottom, #4ec0ca 0%, #b2e6ff 100%);
-  overflow: hidden;
+  background: url("https://i.ibb.co/S7cGTCyX/stunning-pink-clouds-sunrise-starry-night-sky-background-ai-generated-373868944.jpg") no-repeat center center;
+  background-size: cover;
   z-index: -2;
-}
-
-.clouds {
-  position: absolute;
-  width: 200%;
-  height: 100%;
-  background: url("https://i.imgur.com/ax6QH9m.png");
-  background-size: contain;
-  opacity: 0.4;
-  animation: moveClouds 60s linear infinite;
-}
-
-@keyframes moveClouds {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
 }
 
 /* ===== CANVAS ===== */
@@ -38,10 +23,9 @@ canvas {
   position: absolute;
   inset: 0;
   display: none;
-  z-index: 0;
 }
 
-/* ===== OVERLAY ===== */
+/* ===== OVERLAY SYSTEM ===== */
 .overlay {
   position: absolute;
   inset: 0;
@@ -66,52 +50,20 @@ canvas {
   font-size: 60px;
   color: white;
   text-shadow: 5px 5px 0px #000;
+  margin-bottom: 25px;
   line-height: 1;
-  margin-bottom: 30px;
 }
 
-/* ===== MENU BIRD ANIMATION ===== */
+/* ===== MENU BIRD ===== */
 .menu-bird {
-  width: 60px;
-  height: 45px;
-  background: yellow;
-  border-radius: 50%;
-  margin: 0 auto 30px auto;
-  position: relative;
+  width: 90px;
+  margin-bottom: 25px;
   animation: floatBird 2s ease-in-out infinite;
-}
-
-.menu-bird::before {
-  content: "";
-  position: absolute;
-  width: 25px;
-  height: 18px;
-  background: orange;
-  border-radius: 50%;
-  left: -5px;
-  top: 12px;
-  animation: flap 0.5s infinite alternate;
-}
-
-.menu-bird::after {
-  content: "";
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  background: white;
-  border-radius: 50%;
-  right: 12px;
-  top: 10px;
 }
 
 @keyframes floatBird {
   0%,100% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-}
-
-@keyframes flap {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(20deg); }
+  50% { transform: translateY(-20px); }
 }
 
 /* ===== BUTTONS ===== */
@@ -129,7 +81,6 @@ button {
   background: linear-gradient(145deg, #ffd800, #ffb700);
   box-shadow: 0 6px #cc9e00;
   cursor: pointer;
-  transition: 0.2s;
 }
 
 button:active {
@@ -137,7 +88,12 @@ button:active {
   box-shadow: 0 2px #cc9e00;
 }
 
-#scoreText {
-  font-size: 22px;
-  margin-bottom: 20px;
-  }
+/* ===== CREDIT ===== */
+.credit {
+  margin-top: 25px;
+  font-size: 14px;
+  color: white;
+  opacity: 0.9;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+                                }
