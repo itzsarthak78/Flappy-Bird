@@ -6,28 +6,33 @@
 <title>Flappy Bird Pro</title>
 <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <div id="sky"></div>
 
-<!-- ===== MAIN MENU ===== -->
-<div id="menu" class="screen">
-  <h1>FLAPPY BIRD</h1>
-  <button onclick="startGame()">PLAY</button>
-  <button onclick="exitGame()">EXIT</button>
-</div>
-
-<!-- ===== GAME ===== -->
+<!-- GAME CANVAS -->
 <canvas id="gameCanvas"></canvas>
 
-<!-- ===== GAME OVER ===== -->
-<div id="gameOver" class="screen hidden">
-  <div class="card">
+<!-- MAIN MENU -->
+<div id="menu" class="overlay active">
+  <div class="panel">
+    <h1>FLAPPY BIRD</h1>
+    <div class="button-group">
+      <button onclick="startGame()">PLAY</button>
+      <button onclick="exitGame()">EXIT</button>
+    </div>
+  </div>
+</div>
+
+<!-- GAME OVER -->
+<div id="gameOver" class="overlay">
+  <div class="panel">
     <h2>Game Over</h2>
     <p id="scoreText"></p>
-    <button onclick="startGame()">PLAY AGAIN</button>
-    <button onclick="goToMenu()">MAIN MENU</button>
+    <div class="button-group">
+      <button onclick="startGame()">PLAY AGAIN</button>
+      <button onclick="goToMenu()">MAIN MENU</button>
+    </div>
   </div>
 </div>
 
