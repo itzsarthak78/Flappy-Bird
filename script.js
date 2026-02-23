@@ -1,4 +1,4 @@
-const canvas = document.getElementById("gameCanvas");
+iconst canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
@@ -10,10 +10,16 @@ let animationId;
 let frame = 0;
 
 const birdImg = new Image();
-birdImg.src = "https://i.ibb.co/GfpmSgRX/1000016542-removebg-preview.png";
+birdImg.src = "assets/bird.png";
 
-/* ===== START GAME ===== */
+/* START GAME */
 function startGame() {
+
+  if (!birdImg.complete) {
+    alert("Images still loading...");
+    return;
+  }
+
   document.getElementById("menu").classList.remove("active");
   document.getElementById("gameOver").classList.remove("active");
   canvas.style.display = "block";
@@ -36,7 +42,6 @@ function startGame() {
   loop();
 }
 
-/* ===== MENU ===== */
 function goToMenu() {
   gameRunning = false;
   cancelAnimationFrame(animationId);
@@ -48,7 +53,6 @@ function exitGame() {
   alert("Thanks for playing!");
 }
 
-/* ===== SPAWN PIPES ===== */
 function spawnPipe() {
   let gap = 220;
   let top = Math.random() * (canvas.height - gap - 200) + 100;
@@ -64,7 +68,6 @@ function spawnPipe() {
   if (gameRunning) setTimeout(spawnPipe, 2000);
 }
 
-/* ===== DRAW BIRD IMAGE ===== */
 function drawBird() {
   ctx.save();
   ctx.translate(bird.x, bird.y);
@@ -72,7 +75,6 @@ function drawBird() {
   let rotation = Math.max(Math.min(bird.velocity / 25, 0.4), -0.4);
   ctx.rotate(rotation);
 
-  // slight flap scale animation
   let flapScale = 1 + Math.sin(frame * 0.3) * 0.05;
   ctx.scale(flapScale, flapScale);
 
@@ -81,7 +83,6 @@ function drawBird() {
   ctx.restore();
 }
 
-/* ===== DRAW PIPES ===== */
 function drawPipes() {
   pipes.forEach((p,i)=>{
     p.x -= 2.2;
@@ -89,10 +90,6 @@ function drawPipes() {
     ctx.fillStyle="#2ecc40";
     ctx.fillRect(p.x,0,p.w,p.top);
     ctx.fillRect(p.x,p.bottom,p.w,canvas.height-p.bottom-100);
-
-    ctx.fillStyle="#27ae60";
-    ctx.fillRect(p.x-5,p.top-25,p.w+10,25);
-    ctx.fillRect(p.x-5,p.bottom,p.w+10,25);
 
     if(bird.x + bird.w/2 > p.x &&
        bird.x - bird.w/2 < p.x + p.w &&
@@ -110,13 +107,11 @@ function drawPipes() {
   });
 }
 
-/* ===== GROUND ===== */
 function drawGround() {
   ctx.fillStyle="#ded895";
   ctx.fillRect(0,canvas.height-100,canvas.width,100);
 }
 
-/* ===== PHYSICS ===== */
 function updateBird() {
   bird.velocity += bird.gravity;
   bird.y += bird.velocity;
@@ -128,7 +123,6 @@ function updateBird() {
   }
 }
 
-/* ===== GAME LOOP ===== */
 function loop(){
   if(!gameRunning) return;
 
@@ -147,7 +141,6 @@ function loop(){
   animationId = requestAnimationFrame(loop);
 }
 
-/* ===== END GAME ===== */
 function endGame(){
   gameRunning=false;
   cancelAnimationFrame(animationId);
@@ -158,12 +151,6 @@ function endGame(){
   document.getElementById("gameOver").classList.add("active");
 }
 
-/* ===== CONTROLS ===== */
 document.addEventListener("click",()=>{
   if(gameRunning) bird.velocity = bird.lift;
-});
-
-document.addEventListener("keydown",e=>{
-  if(e.code==="Space" && gameRunning)
-    bird.velocity = bird.lift;
 });
