@@ -6,14 +6,14 @@ canvas.height = window.innerHeight;
 
 let bird, pipes, score, highScore;
 let gameRunning = false;
-let frame = 0;
+let animationId;
 
 highScore = localStorage.getItem("flappyHighScore") || 0;
 
 // ===== START GAME =====
 function startGame() {
-  document.getElementById("menu").style.display = "none";
-  document.getElementById("gameOver").style.display = "none";
+  document.getElementById("menu").classList.add("hidden");
+  document.getElementById("gameOver").classList.add("hidden");
   canvas.style.display = "block";
 
   bird = {
@@ -21,8 +21,8 @@ function startGame() {
     y: canvas.height / 2,
     r: 20,
     velocity: 0,
-    gravity: 0.25,   // 🔥 Slower fall
-    lift: -6         // 🔥 Smaller jump
+    gravity: 0.25,
+    lift: -6
   };
 
   pipes = [];
@@ -33,9 +33,23 @@ function startGame() {
   loop();
 }
 
+// ===== MAIN MENU =====
+function goToMenu() {
+  gameRunning = false;
+  cancelAnimationFrame(animationId);
+  canvas.style.display = "none";
+  document.getElementById("menu").classList.remove("hidden");
+  document.getElementById("gameOver").classList.add("hidden");
+}
+
+// ===== EXIT =====
+function exitGame() {
+  alert("Thanks for playing!");
+}
+
 // ===== PIPE SPAWN =====
 function spawnPipe() {
-  let gap = 220;  // 🔥 Bigger gap = easier
+  let gap = 220;
   let top = Math.random() * (canvas.height - gap - 200) + 100;
 
   pipes.push({
@@ -49,21 +63,11 @@ function spawnPipe() {
   if (gameRunning) setTimeout(spawnPipe, 2000);
 }
 
-// ===== BACKGROUND =====
-function drawBackground() {
-  let grad = ctx.createLinearGradient(0,0,0,canvas.height);
-  grad.addColorStop(0,"#4ec0ca");
-  grad.addColorStop(1,"#b2e6ff");
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,canvas.width,canvas.height);
-}
-
 // ===== BIRD =====
 function drawBird() {
   ctx.save();
   ctx.translate(bird.x, bird.y);
 
-  // 🔥 Smaller rotation
   let rotation = Math.max(Math.min(bird.velocity / 25, 0.4), -0.4);
   ctx.rotate(rotation);
 
@@ -72,18 +76,13 @@ function drawBird() {
   ctx.arc(0,0,bird.r,0,Math.PI*2);
   ctx.fill();
 
-  ctx.fillStyle="orange";
-  ctx.beginPath();
-  ctx.ellipse(-5, Math.sin(frame*0.2)*4, 12, 7, 0, 0, Math.PI*2);
-  ctx.fill();
-
   ctx.restore();
 }
 
 // ===== PIPES =====
 function drawPipes() {
   pipes.forEach((p,i)=>{
-    p.x -= 2.2;   // 🔥 Slower pipes
+    p.x -= 2.2;
 
     ctx.fillStyle="#2ecc40";
     ctx.fillRect(p.x,0,p.w,p.top);
@@ -129,8 +128,8 @@ function updateBird() {
 function loop(){
   if(!gameRunning) return;
 
-  frame++;
-  drawBackground();
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
   updateBird();
   drawBird();
   drawPipes();
@@ -140,19 +139,20 @@ function loop(){
   ctx.font="bold 50px Arial";
   ctx.fillText(score,canvas.width/2-10,100);
 
-  requestAnimationFrame(loop);
+  animationId = requestAnimationFrame(loop);
 }
 
-// ===== END =====
+// ===== END GAME =====
 function endGame(){
   gameRunning=false;
+  cancelAnimationFrame(animationId);
 
   if(score>highScore){
     highScore=score;
     localStorage.setItem("flappyHighScore",highScore);
   }
 
-  document.getElementById("gameOver").style.display="block";
+  document.getElementById("gameOver").classList.remove("hidden");
   document.getElementById("scoreText").innerHTML=
   "Score: "+score+"<br>High Score: "+highScore;
 }
