@@ -21,39 +21,32 @@ function startGame() {
     y: canvas.height / 2,
     r: 20,
     velocity: 0,
-    gravity: 0.35,   // 🔥 Slower fall
-    lift: -8         // 🔥 Softer jump
+    gravity: 0.25,   // 🔥 Slower fall
+    lift: -6         // 🔥 Smaller jump
   };
 
   pipes = [];
   score = 0;
   gameRunning = true;
 
-  // First pipe instantly
   spawnPipe();
-
   loop();
 }
 
-// ===== PIPE SPAWN (WITH MINIMUM DISTANCE GAP) =====
+// ===== PIPE SPAWN =====
 function spawnPipe() {
-
-  const gapHeight = 200;
-  const pipeWidth = 90;
-
-  let topHeight = Math.random() * 
-      (canvas.height - gapHeight - 200) + 80;
+  let gap = 220;  // 🔥 Bigger gap = easier
+  let top = Math.random() * (canvas.height - gap - 200) + 100;
 
   pipes.push({
-    x: canvas.width + 300, // 🔥 Spawn far right (minimum 2 pipe gap distance)
-    w: pipeWidth,
-    top: topHeight,
-    bottom: topHeight + gapHeight,
+    x: canvas.width + 200,
+    w: 85,
+    top: top,
+    bottom: top + gap,
     passed: false
   });
 
-  if (gameRunning)
-    setTimeout(spawnPipe, 2200); // 🔥 More time gap between pipes
+  if (gameRunning) setTimeout(spawnPipe, 2000);
 }
 
 // ===== BACKGROUND =====
@@ -68,8 +61,11 @@ function drawBackground() {
 // ===== BIRD =====
 function drawBird() {
   ctx.save();
-  ctx.translate(bird.x,bird.y);
-  ctx.rotate(bird.velocity/18); // smoother rotation
+  ctx.translate(bird.x, bird.y);
+
+  // 🔥 Smaller rotation
+  let rotation = Math.max(Math.min(bird.velocity / 25, 0.4), -0.4);
+  ctx.rotate(rotation);
 
   ctx.fillStyle="yellow";
   ctx.beginPath();
@@ -78,7 +74,7 @@ function drawBird() {
 
   ctx.fillStyle="orange";
   ctx.beginPath();
-  ctx.ellipse(-5,Math.sin(frame*0.25)*6,15,8,0,0,Math.PI*2);
+  ctx.ellipse(-5, Math.sin(frame*0.2)*4, 12, 7, 0, 0, Math.PI*2);
   ctx.fill();
 
   ctx.restore();
@@ -87,25 +83,21 @@ function drawBird() {
 // ===== PIPES =====
 function drawPipes() {
   pipes.forEach((p,i)=>{
-    p.x -= 3; // slightly slower movement
+    p.x -= 2.2;   // 🔥 Slower pipes
 
-    // Body
     ctx.fillStyle="#2ecc40";
     ctx.fillRect(p.x,0,p.w,p.top);
     ctx.fillRect(p.x,p.bottom,p.w,canvas.height-p.bottom-100);
 
-    // Caps
     ctx.fillStyle="#27ae60";
     ctx.fillRect(p.x-5,p.top-25,p.w+10,25);
     ctx.fillRect(p.x-5,p.bottom,p.w+10,25);
 
-    // Collision
     if(bird.x+bird.r>p.x && bird.x-bird.r<p.x+p.w &&
       (bird.y-bird.r<p.top || bird.y+bird.r>p.bottom)){
       endGame();
     }
 
-    // Score
     if(!p.passed && p.x+p.w<bird.x){
       score++;
       p.passed=true;
@@ -127,7 +119,6 @@ function updateBird() {
   bird.y += bird.velocity;
 
   if(bird.y+bird.r>canvas.height-100) endGame();
-
   if(bird.y-bird.r<0){
     bird.y=bird.r;
     bird.velocity=0;
@@ -152,7 +143,7 @@ function loop(){
   requestAnimationFrame(loop);
 }
 
-// ===== END GAME =====
+// ===== END =====
 function endGame(){
   gameRunning=false;
 
@@ -161,68 +152,12 @@ function endGame(){
     localStorage.setItem("flappyHighScore",highScore);
   }
 
-  let medal="None";
-  if(score>=10) medal="🥉 Bronze";
-  if(score>=20) medal="🥈 Silver";
-  if(score>=30) medal="🥇 Gold";
-  if(score>=50) medal="💎 Platinum";
-
   document.getElementById("gameOver").style.display="block";
   document.getElementById("scoreText").innerHTML=
   "Score: "+score+"<br>High Score: "+highScore;
-  document.getElementById("medalText").innerText="Medal: "+medal;
 }
 
 // ===== CONTROLS =====
-document.addEventListener("click",()=>{
-  if(gameRunning) bird.velocity=bird.lift;
-});
-document.addEventListener("keydown",e=>{
-  if(e.code==="Space" && gameRunning) bird.velocity=bird.lift;
-});
-  if(bird.y+bird.r>canvas.height-100) endGame();
-  if(bird.y-bird.r<0){
-    bird.y=bird.r;
-    bird.velocity=0;
-  }
-}
-
-function loop(){
-  if(!gameRunning) return;
-  frame++;
-  drawBackground();
-  updateBird();
-  drawBird();
-  drawPipes();
-  drawGround();
-
-  ctx.fillStyle="white";
-  ctx.font="bold 50px Arial";
-  ctx.fillText(score,canvas.width/2-10,100);
-
-  requestAnimationFrame(loop);
-}
-
-function endGame(){
-  gameRunning=false;
-
-  if(score>highScore){
-    highScore=score;
-    localStorage.setItem("flappyHighScore",highScore);
-  }
-
-  let medal="None";
-  if(score>=10) medal="🥉 Bronze";
-  if(score>=20) medal="🥈 Silver";
-  if(score>=30) medal="🥇 Gold";
-  if(score>=50) medal="💎 Platinum";
-
-  document.getElementById("gameOver").style.display="block";
-  document.getElementById("scoreText").innerHTML=
-  "Score: "+score+"<br>High Score: "+highScore;
-  document.getElementById("medalText").innerText="Medal: "+medal;
-}
-
 document.addEventListener("click",()=>{
   if(gameRunning) bird.velocity=bird.lift;
 });
