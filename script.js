@@ -6,27 +6,13 @@ canvas.height = window.innerHeight;
 
 let bird, pipes, score;
 let gameRunning = false;
-let animationId = null;
+let animationId;
+let frame = 0;
 
 /* SCREEN CONTROL */
-function showMenu() {
-  document.getElementById("menu").classList.add("active");
-  document.getElementById("gameOver").classList.remove("active");
-  canvas.style.display = "none";
-}
-
-function showGameOver() {
-  document.getElementById("gameOver").classList.add("active");
-}
-
-function hideAll() {
+function startGame() {
   document.getElementById("menu").classList.remove("active");
   document.getElementById("gameOver").classList.remove("active");
-}
-
-/* START GAME */
-function startGame() {
-  hideAll();
   canvas.style.display = "block";
 
   bird = {
@@ -46,19 +32,18 @@ function startGame() {
   loop();
 }
 
-/* GO TO MENU */
 function goToMenu() {
   gameRunning = false;
   cancelAnimationFrame(animationId);
-  showMenu();
+  canvas.style.display = "none";
+  document.getElementById("menu").classList.add("active");
 }
 
-/* EXIT */
 function exitGame() {
   alert("Thanks for playing!");
 }
 
-/* SPAWN PIPE */
+/* PIPE SPAWN */
 function spawnPipe() {
   let gap = 220;
   let top = Math.random() * (canvas.height - gap - 200) + 100;
@@ -74,7 +59,7 @@ function spawnPipe() {
   if (gameRunning) setTimeout(spawnPipe, 2000);
 }
 
-/* DRAW BIRD */
+/* BIRD DRAW */
 function drawBird() {
   ctx.save();
   ctx.translate(bird.x, bird.y);
@@ -82,15 +67,41 @@ function drawBird() {
   let rotation = Math.max(Math.min(bird.velocity / 25, 0.4), -0.4);
   ctx.rotate(rotation);
 
+  // Body
   ctx.fillStyle="yellow";
   ctx.beginPath();
   ctx.arc(0,0,bird.r,0,Math.PI*2);
   ctx.fill();
 
+  // Wing animation
+  ctx.fillStyle="orange";
+  ctx.beginPath();
+  ctx.ellipse(-5, Math.sin(frame*0.3)*6, 14, 8, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // Eye
+  ctx.fillStyle="white";
+  ctx.beginPath();
+  ctx.arc(8,-5,6,0,Math.PI*2);
+  ctx.fill();
+
+  ctx.fillStyle="black";
+  ctx.beginPath();
+  ctx.arc(10,-5,3,0,Math.PI*2);
+  ctx.fill();
+
+  // Beak
+  ctx.fillStyle="orange";
+  ctx.beginPath();
+  ctx.moveTo(15,0);
+  ctx.lineTo(28,5);
+  ctx.lineTo(15,10);
+  ctx.fill();
+
   ctx.restore();
 }
 
-/* DRAW PIPES */
+/* PIPES */
 function drawPipes() {
   pipes.forEach((p,i)=>{
     p.x -= 2.2;
@@ -139,6 +150,7 @@ function updateBird() {
 function loop(){
   if(!gameRunning) return;
 
+  frame++;
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
   updateBird();
@@ -153,7 +165,7 @@ function loop(){
   animationId = requestAnimationFrame(loop);
 }
 
-/* END GAME */
+/* END */
 function endGame(){
   gameRunning=false;
   cancelAnimationFrame(animationId);
@@ -161,10 +173,9 @@ function endGame(){
   document.getElementById("scoreText").innerHTML =
     "Score: " + score;
 
-  showGameOver();
+  document.getElementById("gameOver").classList.add("active");
 }
 
-/* CONTROLS */
 document.addEventListener("click",()=>{
   if(gameRunning) bird.velocity=bird.lift;
 });
