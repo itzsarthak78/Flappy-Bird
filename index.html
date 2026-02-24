@@ -19,8 +19,8 @@
     <div id="telegramUserBox"></div>
 
     <div class="buttons">
-      <button onclick="startGame()">PLAY</button>
-      <button onclick="openLeaderboard()">LEADERBOARD</button>
+      <button id="playBtn">PLAY</button>
+      <button id="leaderboardBtn">LEADERBOARD</button>
     </div>
 
     <p class="credit">Prepared by Sarthak</p>
@@ -32,16 +32,16 @@
   <div class="panel">
     <h2>Game Over</h2>
     <p id="scoreText"></p>
-    <button onclick="goToMenu()">MAIN MENU</button>
+    <button id="menuBtn">MAIN MENU</button>
   </div>
 </div>
 
 <!-- LEADERBOARD -->
 <div id="leaderboard" class="overlay">
   <div class="panel">
-    <h2>Top 30 Players</h2>
+    <h2>🏆 Top 30 Players</h2>
     <div id="leaderboardList"></div>
-    <button onclick="goToMenu()">BACK</button>
+    <button id="backBtn">BACK</button>
   </div>
 </div>
 
