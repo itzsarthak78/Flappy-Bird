@@ -1,8 +1,6 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+/* ================= FIREBASE ================= */
 
-/* FIREBASE */
-const firebaseConfig = {
+var firebaseConfig = {
   apiKey: "AIzaSyBeOs5mpgYn4fFPJXq_m1Sb-h2D58_EKzE",
   authDomain: "flappy-leaderboard-c73c3.firebaseapp.com",
   databaseURL: "https://flappy-leaderboard-c73c3-default-rtdb.firebaseio.com",
@@ -12,11 +10,12 @@ const firebaseConfig = {
   appId: "1:615022691172:web:72817c43f3e509feee7071"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+firebase.initializeApp(firebaseConfig);
+var database = firebase.database();
 
-/* TELEGRAM */
-let tgUser = null;
+/* ================= TELEGRAM ================= */
+
+var tgUser = null;
 
 if (window.Telegram && Telegram.WebApp) {
   Telegram.WebApp.ready();
@@ -24,138 +23,275 @@ if (window.Telegram && Telegram.WebApp) {
 
   if (tgUser) {
     document.getElementById("telegramUserBox").innerHTML =
-      `👤 ${tgUser.first_name} (@${tgUser.username || ""})`;
+      "👤 " + tgUser.first_name +
+      " (@" + (tgUser.username || "") + ")";
   }
 }
 
-/* BUTTON EVENTS */
-document.getElementById("playBtn").addEventListener("click", startGame);
-document.getElementById("leaderboardBtn").addEventListener("click", openLeaderboard);
-document.getElementById("menuBtn").addEventListener("click", goToMenu);
-document.getElementById("backBtn").addEventListener("click", goToMenu);
+/* ================= BUTTON EVENTS ================= */
 
-/* GAME */
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+document.getElementById("playBtn").onclick = startGame;
+document.getElementById("leaderboardBtn").onclick = openLeaderboard;
+document.getElementById("menuBtn").onclick = goToMenu;
+document.getElementById("backBtn").onclick = goToMenu;
+
+/* ================= GAME SETUP ================= */
+
+var canvas = document.getElementById("gameCanvas");
+var ctx = canvas.getContext("2d");
+
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-let bird, pipes, score;
-let gameRunning = false;
-let animationId;
+var bird, pipes, score;
+var gameRunning = false;
+var animationId;
 
-const birdImg = new Image();
+var birdImg = new Image();
 birdImg.src = "assets/bird.png";
 
-function startGame() {
-  document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("active"));
-  canvas.style.display="block";
+/* ================= START GAME ================= */
 
-  bird={x:120,y:canvas.height/2,w:60,h:45,velocity:0,gravity:0.25,lift:-6};
-  pipes=[];
-  score=0;
-  gameRunning=true;
+function startGame() {
+
+  document.querySelectorAll(".overlay")
+    .forEach(o => o.classList.remove("active"));
+
+  canvas.style.display = "block";
+
+  bird = {
+    x: 120,
+    y: canvas.height / 2,
+    w: 60,
+    h: 45,
+    velocity: 0,
+    gravity: 0.25,
+    lift: -6
+  };
+
+  pipes = [];
+  score = 0;
+  gameRunning = true;
 
   spawnPipe();
   loop();
 }
 
-function spawnPipe(){
-  let gap=220;
-  let top=Math.random()*(canvas.height-gap-200)+100;
-  pipes.push({x:canvas.width+200,w:85,top,bottom:top+gap,passed:false});
-  if(gameRunning) setTimeout(spawnPipe,2000);
+/* ================= SPAWN PIPE ================= */
+
+function spawnPipe() {
+
+  var gap = 220;
+  var top = Math.random() * (canvas.height - gap - 200) + 100;
+
+  pipes.push({
+    x: canvas.width + 200,
+    w: 85,
+    top: top,
+    bottom: top + gap,
+    passed: false,
+    capHeight: 25
+  });
+
+  if (gameRunning) {
+    setTimeout(spawnPipe, 2000);
+  }
 }
 
-function loop(){
-  if(!gameRunning) return;
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+/* ================= GAME LOOP ================= */
 
-  bird.velocity+=bird.gravity;
-  bird.y+=bird.velocity;
+function loop() {
 
-  ctx.drawImage(birdImg,bird.x-30,bird.y-22,60,45);
+  if (!gameRunning) return;
 
-  pipes.forEach((p,i)=>{
-    p.x-=2.2;
-    ctx.fillStyle="#2ecc40";
-    ctx.fillRect(p.x,0,p.w,p.top);
-    ctx.fillRect(p.x,p.bottom,p.w,canvas.height-p.bottom-100);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    if(bird.x+30>p.x&&bird.x-30<p.x+p.w&&(bird.y-22<p.top||bird.y+22>p.bottom)){
+  /* ---- Bird Physics ---- */
+
+  bird.velocity += bird.gravity;
+  bird.y += bird.velocity;
+
+  ctx.drawImage(
+    birdImg,
+    bird.x - bird.w / 2,
+    bird.y - bird.h / 2,
+    bird.w,
+    bird.h
+  );
+
+  /* ---- Pipes ---- */
+
+  pipes.forEach(function (p, i) {
+
+    p.x -= 2.2;
+
+    /* PIPE BODY */
+    ctx.fillStyle = "#2ecc40";
+
+    // Top pipe body
+    ctx.fillRect(p.x, 0, p.w, p.top);
+
+    // Bottom pipe body
+    ctx.fillRect(
+      p.x,
+      p.bottom,
+      p.w,
+      canvas.height - p.bottom - 100
+    );
+
+    /* PIPE CAPS */
+    ctx.fillStyle = "#27ae60";
+
+    // Top cap
+    ctx.fillRect(
+      p.x - 5,
+      p.top - p.capHeight,
+      p.w + 10,
+      p.capHeight
+    );
+
+    // Bottom cap
+    ctx.fillRect(
+      p.x - 5,
+      p.bottom,
+      p.w + 10,
+      p.capHeight
+    );
+
+    /* COLLISION */
+
+    if (
+      bird.x + bird.w / 2 > p.x &&
+      bird.x - bird.w / 2 < p.x + p.w &&
+      (bird.y - bird.h / 2 < p.top ||
+       bird.y + bird.h / 2 > p.bottom)
+    ) {
       endGame();
     }
 
-    if(!p.passed&&p.x+p.w<bird.x){score++;p.passed=true;}
-    if(p.x+p.w<0) pipes.splice(i,1);
+    /* SCORE */
+
+    if (!p.passed && p.x + p.w < bird.x) {
+      score++;
+      p.passed = true;
+    }
+
+    if (p.x + p.w < 0) {
+      pipes.splice(i, 1);
+    }
   });
 
-  ctx.fillStyle="white";
-  ctx.font="bold 50px Arial";
-  ctx.fillText(score,canvas.width/2-10,100);
+  /* ---- Score Display ---- */
 
-  animationId=requestAnimationFrame(loop);
+  ctx.fillStyle = "white";
+  ctx.font = "bold 50px Arial";
+  ctx.fillText(score, canvas.width / 2 - 10, 100);
+
+  animationId = requestAnimationFrame(loop);
 }
 
-async function endGame(){
-  gameRunning=false;
+/* ================= END GAME ================= */
+
+function endGame() {
+
+  if (!gameRunning) return;
+
+  gameRunning = false;
   cancelAnimationFrame(animationId);
 
-  if(tgUser){
-    const userRef=ref(db,"scores/"+tgUser.id);
-    const snap=await get(userRef);
-    const oldScore=snap.exists()?snap.val().score:0;
+  if (tgUser) {
 
-    if(score>oldScore){
-      await set(userRef,{
-        name:tgUser.first_name,
-        username:tgUser.username||"",
-        score
-      });
-    }
+    var userRef = database.ref("scores/" + tgUser.id);
+
+    userRef.once("value").then(function (snapshot) {
+
+      var oldScore = snapshot.exists() ? snapshot.val().score : 0;
+
+      if (score > oldScore) {
+        userRef.set({
+          name: tgUser.first_name,
+          username: tgUser.username || "",
+          score: score
+        });
+      }
+    });
   }
 
-  document.getElementById("scoreText").innerHTML="Score: "+score;
-  document.getElementById("gameOver").classList.add("active");
+  document.getElementById("scoreText").innerHTML =
+    "Score: " + score;
+
+  document.getElementById("gameOver")
+    .classList.add("active");
 }
 
-/* LEADERBOARD */
-async function openLeaderboard(){
-  document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("active"));
-  document.getElementById("leaderboard").classList.add("active");
+/* ================= LEADERBOARD ================= */
 
-  const snap=await get(ref(db,"scores"));
-  const data=snap.val();
-  if(!data) return;
+function openLeaderboard() {
 
-  let arr=[];
-  for(let id in data) arr.push(data[id]);
-  arr.sort((a,b)=>b.score-a.score);
+  document.querySelectorAll(".overlay")
+    .forEach(o => o.classList.remove("active"));
 
-  let html="";
-  arr.slice(0,30).forEach((p,i)=>{
-    let crown=i===0?"👑":"";
-    html+=`
-      <div class="playerRow">
-        <div class="playerLeft">
-          <div class="rank">${i+1}${crown}</div>
-          <div class="pfp">${p.name.charAt(0)}</div>
-          <div>${p.name}</div>
-        </div>
-        <div class="score">${p.score}</div>
-      </div>
-    `;
-  });
+  document.getElementById("leaderboard")
+    .classList.add("active");
 
-  document.getElementById("leaderboardList").innerHTML=html;
+  database.ref("scores")
+    .once("value")
+    .then(function (snapshot) {
+
+      var data = snapshot.val();
+      if (!data) return;
+
+      var arr = [];
+
+      for (var id in data) {
+        arr.push(data[id]);
+      }
+
+      arr.sort(function (a, b) {
+        return b.score - a.score;
+      });
+
+      var html = "";
+
+      arr.slice(0, 30).forEach(function (p, i) {
+
+        var crown = i === 0 ? " 👑" : "";
+
+        html +=
+          "<div class='playerRow'>" +
+            "<div class='playerLeft'>" +
+              "<div class='rank'>" + (i + 1) + crown + "</div>" +
+              "<div class='pfp'>" +
+                p.name.charAt(0) +
+              "</div>" +
+              "<div>" + p.name + "</div>" +
+            "</div>" +
+            "<div class='score'>" + p.score + "</div>" +
+          "</div>";
+      });
+
+      document.getElementById("leaderboardList")
+        .innerHTML = html;
+    });
 }
 
-function goToMenu(){
-  canvas.style.display="none";
-  document.querySelectorAll(".overlay").forEach(o=>o.classList.remove("active"));
-  document.getElementById("menu").classList.add("active");
+/* ================= MENU ================= */
+
+function goToMenu() {
+
+  canvas.style.display = "none";
+
+  document.querySelectorAll(".overlay")
+    .forEach(o => o.classList.remove("active"));
+
+  document.getElementById("menu")
+    .classList.add("active");
 }
 
-document.addEventListener("click",()=>{
-  if(gameRunning) bird.velocity=bird.lift;
+/* ================= CONTROLS ================= */
+
+document.addEventListener("click", function () {
+  if (gameRunning) {
+    bird.velocity = bird.lift;
+  }
 });
