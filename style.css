@@ -7,9 +7,10 @@
 body {
   font-family: Arial Black, sans-serif;
   overflow: hidden;
+  color: white;
 }
 
-/* SKY USING LOCAL IMAGE */
+/* SKY */
 .sky {
   position: fixed;
   inset: 0;
@@ -30,6 +31,7 @@ canvas {
   display: none;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 
 .overlay.active {
@@ -37,33 +39,21 @@ canvas {
 }
 
 .panel {
-  text-align: center;
   width: 90%;
   max-width: 420px;
 }
 
 .title {
   font-size: 60px;
-  color: white;
   text-shadow: 5px 5px 0 #000;
   margin-bottom: 20px;
-}
-
-.menu-bird {
-  width: 90px;
-  margin-bottom: 25px;
-  animation: floatBird 2s ease-in-out infinite;
-}
-
-@keyframes floatBird {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-20px); }
 }
 
 .buttons {
   display: flex;
   flex-direction: column;
   gap: 15px;
+  margin-top: 15px;
 }
 
 button {
@@ -73,6 +63,7 @@ button {
   border: none;
   background: #ffd800;
   box-shadow: 0 6px #cc9e00;
+  cursor: pointer;
 }
 
 button:active {
@@ -82,11 +73,12 @@ button:active {
 
 .credit {
   margin-top: 20px;
-  color: white;
+  font-size: 14px;
 }
 
-#scoreText {
-  font-size: 22px;
-  margin-bottom: 20px;
-  color: white;
+#leaderboardList {
+  max-height: 300px;
+  overflow-y: auto;
+  margin: 15px 0;
+  text-align: left;
 }
