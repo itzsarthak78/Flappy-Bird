@@ -82,7 +82,7 @@ function startGame() {
 function spawnPipe() {
 
   var gap = 220;
-  var top = Math.random() * (canvas.height - gap - 200) + 100;
+  var top = Math.random() * (canvas.height - gap - 100) + 50;
 
   pipes.push({
     x: canvas.width + 200,
@@ -106,8 +106,7 @@ function loop() {
 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  /* ---- Bird Physics ---- */
-
+  /* Bird Physics */
   bird.velocity += bird.gravity;
   bird.y += bird.velocity;
 
@@ -119,8 +118,7 @@ function loop() {
     bird.h
   );
 
-  /* ---- Pipes ---- */
-
+  /* Pipes */
   pipes.forEach(function (p, i) {
 
     p.x -= 2.2;
@@ -128,15 +126,15 @@ function loop() {
     /* PIPE BODY */
     ctx.fillStyle = "#2ecc40";
 
-    // Top pipe body
+    // Top pipe
     ctx.fillRect(p.x, 0, p.w, p.top);
 
-    // Bottom pipe body
+    // Bottom pipe (FIXED — no floating)
     ctx.fillRect(
       p.x,
       p.bottom,
       p.w,
-      canvas.height - p.bottom - 100
+      canvas.height - p.bottom
     );
 
     /* PIPE CAPS */
@@ -159,7 +157,6 @@ function loop() {
     );
 
     /* COLLISION */
-
     if (
       bird.x + bird.w / 2 > p.x &&
       bird.x - bird.w / 2 < p.x + p.w &&
@@ -170,7 +167,6 @@ function loop() {
     }
 
     /* SCORE */
-
     if (!p.passed && p.x + p.w < bird.x) {
       score++;
       p.passed = true;
@@ -181,8 +177,7 @@ function loop() {
     }
   });
 
-  /* ---- Score Display ---- */
-
+  /* Score Display */
   ctx.fillStyle = "white";
   ctx.font = "bold 50px Arial";
   ctx.fillText(score, canvas.width / 2 - 10, 100);
@@ -209,7 +204,7 @@ function endGame() {
 
       if (score > oldScore) {
         userRef.set({
-          name: tgUser.first_name,
+          name: tgUser.first_name || "User",
           username: tgUser.username || "",
           score: score
         });
@@ -257,14 +252,17 @@ function openLeaderboard() {
 
         var crown = i === 0 ? " 👑" : "";
 
+        var initial =
+          (p.name && p.name.length > 0)
+            ? p.name.charAt(0).toUpperCase()
+            : "U";
+
         html +=
           "<div class='playerRow'>" +
             "<div class='playerLeft'>" +
               "<div class='rank'>" + (i + 1) + crown + "</div>" +
-              "<div class='pfp'>" +
-                p.name.charAt(0) +
-              "</div>" +
-              "<div>" + p.name + "</div>" +
+              "<div class='pfp'>" + initial + "</div>" +
+              "<div>" + (p.name || "User") + "</div>" +
             "</div>" +
             "<div class='score'>" + p.score + "</div>" +
           "</div>";
