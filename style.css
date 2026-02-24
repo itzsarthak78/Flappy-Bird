@@ -1,3 +1,5 @@
+/* ===== RESET ===== */
+
 * {
   margin: 0;
   padding: 0;
@@ -5,12 +7,13 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Arial', sans-serif;
   overflow: hidden;
   color: white;
 }
 
-/* SKY BACKGROUND */
+/* ===== SKY BACKGROUND ===== */
+
 .sky {
   position: fixed;
   inset: 0;
@@ -18,13 +21,16 @@ body {
   z-index: -2;
 }
 
+/* ===== CANVAS ===== */
+
 canvas {
   position: absolute;
   inset: 0;
   display: none;
 }
 
-/* OVERLAYS */
+/* ===== OVERLAY ===== */
+
 .overlay {
   position: absolute;
   inset: 0;
@@ -32,83 +38,132 @@ canvas {
   justify-content: center;
   align-items: center;
   text-align: center;
+  padding: 20px;
 }
 
 .overlay.active {
   display: flex;
 }
 
+/* ===== PANEL (Glass Effect) ===== */
+
 .panel {
-  width: 90%;
+  width: 95%;
   max-width: 420px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 25px 20px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.6);
 }
 
+/* ===== TITLE ===== */
+
 .title {
-  font-size: 60px;
+  font-size: 56px;
+  font-weight: 900;
+  letter-spacing: 2px;
   text-shadow: 4px 4px 0 #000;
   margin-bottom: 20px;
 }
 
+/* ===== BUTTONS ===== */
+
 .buttons {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 16px;
   margin-top: 20px;
 }
 
 button {
-  padding: 15px;
+  padding: 16px;
   font-size: 18px;
+  font-weight: bold;
   border: none;
-  border-radius: 15px;
-  background: #ffd800;
-  box-shadow: 0 6px #cc9e00;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #ffd800, #ffb700);
+  box-shadow: 0 6px 0 #cc9e00;
   cursor: pointer;
+  transition: 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
 }
 
 button:active {
   transform: translateY(3px);
-  box-shadow: 0 2px #cc9e00;
+  box-shadow: 0 2px 0 #cc9e00;
 }
 
-/* Leaderboard */
+/* ===== CREDIT ===== */
+
+.credit {
+  margin-top: 18px;
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+/* ===== LEADERBOARD ===== */
 
 #leaderboardList {
   max-height: 350px;
   overflow-y: auto;
-  margin: 15px 0;
+  margin-top: 20px;
 }
+
+/* Player Row */
 
 .playerRow {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(0,0,0,0.4);
-  padding: 10px;
-  border-radius: 12px;
-  margin-bottom: 8px;
+  padding: 12px 15px;
+  border-radius: 14px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  transition: 0.2s ease;
 }
+
+/* Default row */
+
+.playerRow {
+  background: rgba(255,255,255,0.08);
+}
+
+/* Top 1 - Gold */
+
+.playerRow:nth-child(1) {
+  background: linear-gradient(145deg, #ffd700, #ffb700);
+  color: black;
+  font-weight: 800;
+}
+
+/* Top 2 - Silver */
+
+.playerRow:nth-child(2) {
+  background: linear-gradient(145deg, #dcdcdc, #bfbfbf);
+  color: black;
+}
+
+/* Top 3 - Bronze */
+
+.playerRow:nth-child(3) {
+  background: linear-gradient(145deg, #cd7f32, #a55c1b);
+  color: white;
+}
+
+/* Rank & Name */
 
 .playerLeft {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .rank {
-  width: 35px;
-  font-weight: bold;
-}
-
-.pfp {
   width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: white;
-  color: black;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   font-weight: bold;
 }
 
@@ -116,7 +171,13 @@ button:active {
   font-weight: bold;
 }
 
-.credit {
-  margin-top: 20px;
-  font-size: 14px;
+/* Scrollbar Styling */
+
+#leaderboardList::-webkit-scrollbar {
+  width: 6px;
 }
+
+#leaderboardList::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.4);
+  border-radius: 10px;
+  }
